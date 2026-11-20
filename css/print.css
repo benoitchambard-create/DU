@@ -20,6 +20,7 @@
 .pr-doc { color: #14213A; font-family: 'Atkinson Hyperlegible', sans-serif; }
 .pr-doc h1, .pr-doc h2, .pr-doc h3, .pr-doc h4 { font-family: 'Fraunces', Georgia, serif; color: #1B365D; margin: 0 0 6pt; }
 .pr-cover { min-height: 170mm; display: flex; flex-direction: column; justify-content: center; break-after: page; padding-left: 12mm; border-left: 3mm solid #0D7377; }
+.pr-logo { display: block; height: 26mm; width: auto; max-width: 90mm; object-fit: contain; align-self: flex-start; margin-bottom: 12mm; }
 .pr-kicker { font-size: 11pt; letter-spacing: 0.14em; text-transform: uppercase; color: #0D7377; font-weight: 700; margin-bottom: 8mm; }
 .pr-cover h1 { font-size: 38pt; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 12mm; }
 .pr-meta { display: grid; grid-template-columns: repeat(3, auto); gap: 4mm 14mm; justify-content: start; margin: 0; }

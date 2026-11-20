@@ -33,9 +33,21 @@
     wb.created = new Date();
     const unite = (id) => M.uniteNom(src, id);
 
+    const logo = logoOf(src);
+    const logoId = logo ? wb.addImage({ base64: logo.src.split(',')[1], extension: 'png' }) : null;
+    const placeLogo = (ws, col, row, hPx) => {
+      if (logoId === null) return;
+      ws.addImage(logoId, { tl: { col, row }, ext: { width: Math.round(hPx * logo.w / logo.h), height: hPx }, editAs: 'oneCell' });
+    };
+
     /* Présentation */
     const pres = wb.addWorksheet('Présentation');
     pres.columns = [{ width: 34 }, { width: 80 }];
+    if (logo) {
+      // Lignes réservées au logo au-dessus du contenu
+      for (let i = 0; i < 5; i++) pres.addRow([]);
+      placeLogo(pres, 0, 0.3, 80);
+    }
     [
       ['Document unique d’évaluation des risques professionnels', ''],
       ['Raison sociale', src.entreprise.raisonSociale],
@@ -47,7 +59,7 @@
       ['Rédacteur', versionInfo ? versionInfo.redacteur : src.document.redacteur],
       ['Vérificateur', versionInfo ? versionInfo.verificateur : src.document.verificateur],
     ].forEach((r) => pres.addRow(r));
-    pres.getRow(1).font = { bold: true, size: 14 };
+    pres.getRow(logo ? 6 : 1).font = { bold: true, size: 14 };
     pres.getColumn(1).font = { bold: true };
 
     /* Méthode */
@@ -238,8 +250,20 @@
     </section>`;
   }
 
+  /** Logo de la version imprimée, ou à défaut le logo actuel. */
+  const logoOf = (src) => (src.entreprise && src.entreprise.logo) || ((DU.store.get() || {}).entreprise || {}).logo || null;
+
+  /** Logo dimensionné pour l'en-tête des pages : enveloppe SVG pour garder la netteté. */
+  function headerLogo(logo, hPx = 30) {
+    const w = Math.round(hPx * logo.w / logo.h);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${w}" height="${hPx}" viewBox="0 0 ${logo.w} ${logo.h}"><image width="${logo.w}" height="${logo.h}" xlink:href="${logo.src}"/></svg>`;
+    return 'data:image/svg+xml;base64,' + btoa(svg);
+  }
+
   function cover(src, titre, info) {
+    const logo = logoOf(src);
     return `<section class="pr-cover">
+      ${logo ? `<img class="pr-logo" src="${logo.src}" alt="${esc(src.entreprise.raisonSociale)}">` : ''}
       <p class="pr-kicker">${esc(src.entreprise.raisonSociale)}</p>
       <h1>${titre}</h1>
       <dl class="pr-meta">
@@ -327,7 +351,9 @@
     else if (type === 'papripact') html = docPapripact(src, annee, docInfo);
     else if (type === 'penibilite') html = docPenibilite(src, docInfo);
     const pied = `${src.entreprise.raisonSociale || ''} · Document unique${docInfo.indice ? ' · version ' + docInfo.indice : ''} · ${fmtDate(docInfo.date)}`;
-    root.innerHTML = `<style>@page { @bottom-left { content: ${JSON.stringify(pied)}; } }</style><div class="pr-doc">${html}</div>`;
+    const logo = logoOf(src);
+    const entete = logo ? `@page { @top-right { content: url("${headerLogo(logo)}"); vertical-align: bottom; padding-bottom: 3mm; } } @page :first { @top-right { content: none; } }` : '';
+    root.innerHTML = `<style>@page { @bottom-left { content: ${JSON.stringify(pied)}; } } ${entete}</style><div class="pr-doc">${html}</div>`;
     const prevTitle = document.title;
     document.title = titre || `DUERP-${slug(src.entreprise.raisonSociale)}-${docInfo.date}`;
     document.body.classList.add('is-printing');

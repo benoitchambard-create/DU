@@ -150,6 +150,55 @@ window.DU = window.DU || {};
     }, 1000);
   }
 
+  /**
+   * Prépare un logo : fond blanc rendu transparent, marges rognées, largeur limitée.
+   * Renvoie { src (PNG en data URL), w, h }.
+   */
+  function loadLogo(file) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('image')); };
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const c = document.createElement('canvas');
+        c.width = img.naturalWidth; c.height = img.naturalHeight;
+        const ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        const id = ctx.getImageData(0, 0, c.width, c.height);
+        const px = id.data;
+        let opaque = true;
+        for (let i = 3; i < px.length; i += 4) if (px[i] < 250) { opaque = false; break; }
+        if (opaque) {
+          // Fond blanc → transparent, en conservant l'anticrénelage des contours
+          for (let i = 0; i < px.length; i += 4) {
+            const m = Math.min(px[i], px[i + 1], px[i + 2]);
+            const a = Math.max(0, Math.min(1, (255 - m) / 90));
+            if (a < 1) {
+              for (let k = 0; k < 3; k++) px[i + k] = a ? Math.max(0, Math.min(255, Math.round((px[i + k] - (1 - a) * 255) / a))) : 0;
+              px[i + 3] = Math.round(a * 255);
+            }
+          }
+          ctx.putImageData(id, 0, 0);
+        }
+        let x0 = c.width, y0 = c.height, x1 = -1, y1 = -1;
+        for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) {
+          if (px[(y * c.width + x) * 4 + 3] > 12) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+        }
+        if (x1 < 0) { reject(new Error('vide')); return; }
+        const w0 = x1 - x0 + 1, h0 = y1 - y0 + 1;
+        const scale = Math.min(1, 800 / w0);
+        const out = document.createElement('canvas');
+        out.width = Math.round(w0 * scale); out.height = Math.round(h0 * scale);
+        const o = out.getContext('2d');
+        o.imageSmoothingQuality = 'high';
+        o.drawImage(c, x0, y0, w0, h0, 0, 0, out.width, out.height);
+        resolve({ src: out.toDataURL('image/png'), w: out.width, h: out.height });
+      };
+      img.src = url;
+    });
+  }
+
   /** Remplace le conteneur de vue par une copie vide : supprime les anciens écouteurs. */
   function resetRoot() {
     const old = document.getElementById('view-root');
@@ -163,6 +212,6 @@ window.DU = window.DU || {};
 
   DU.util = {
     esc, uid, clone, norm, toISODate, todayISO, parseISO, fmtDate, fmtDateLong, addYears,
-    daysBetween, fmtNum, plural, debounce, $, $$, toast, openDialog, confirmDialog, download, slug, resetRoot,
+    daysBetween, fmtNum, plural, debounce, $, $$, toast, openDialog, confirmDialog, download, slug, resetRoot, loadLogo,
   };
 })(window.DU);

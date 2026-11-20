@@ -40,6 +40,17 @@
               <label class="field"><span class="field__label">Rédacteur</span><input data-path="document.redacteur" value="${esc(data.document.redacteur)}"></label>
               <label class="field"><span class="field__label">Vérificateur</span><input data-path="document.verificateur" value="${esc(data.document.verificateur)}"></label>
             </div>
+            <h3 class="sheet__h">Logo</h3>
+            <div class="logo-field">
+              <div class="logo-field__preview">${data.entreprise.logo ? `<img src="${data.entreprise.logo.src}" alt="Logo actuel">` : '<span class="hint">Aucun logo</span>'}</div>
+              <div>
+                <p class="hint">Affiché dans l’en-tête de chaque écran, sur les documents PDF et dans les exports Excel. Un fond blanc est rendu transparent automatiquement.</p>
+                <div class="btn-row">
+                  <button type="button" class="btn btn--ghost" data-logo="pick">${data.entreprise.logo ? 'Remplacer le logo' : 'Choisir un logo'}</button>
+                  ${data.entreprise.logo ? '<button type="button" class="btn btn--danger-text" data-logo="remove">Retirer</button>' : ''}
+                </div>
+              </div>
+            </div>
             <h3 class="sheet__h">Informations de présentation</h3>
             <ul class="kv-list">${data.entreprise.infos.map((i, n) => `<li>
               <input data-info="${n}" data-f="label" value="${esc(i.label)}" aria-label="Intitulé">
@@ -176,6 +187,16 @@
         DU.store.commit((x) => { x.familles.splice(Number(t.dataset.delFam), 1); });
       } else if (t.dataset.delAct !== undefined) DU.store.commit((x) => { x.acteurs.splice(Number(t.dataset.delAct), 1); });
       else if (t.dataset.file) await DU.app.fileAction(t.dataset.file);
+      else if (t.dataset.logo === 'remove') DU.store.commit((x) => { x.entreprise.logo = null; });
+      else if (t.dataset.logo === 'pick') {
+        let file;
+        try { file = await DU.store.pickFile('image/png,image/jpeg,image/webp,image/svg+xml'); } catch (err) { return; }
+        try {
+          const logo = await DU.util.loadLogo(file);
+          DU.store.commit((x) => { x.entreprise.logo = logo; });
+          toast('Logo enregistré.', 'ok');
+        } catch (err) { toast('Cette image n’a pas pu être lue.', 'warn'); }
+      }
     });
 
     if (params && params.anchor) setTimeout(() => { const el = document.getElementById(params.anchor); if (el) el.scrollIntoView(); }, 30);

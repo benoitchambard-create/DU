@@ -65,8 +65,13 @@
     const data = DU.store.get();
     const nav = $('#main-nav');
     const brand = $('#brand-sub');
+    const logoWrap = $('#brand-logo');
+    const logo = data && data.entreprise.logo;
+    logoWrap.hidden = !logo;
+    logoWrap.innerHTML = logo ? `<img class="brand__logo" src="${logo.src}" alt="${esc(data.entreprise.raisonSociale || 'Logo de l’entreprise')}">` : '';
+    $('#favicon').href = logo ? logo.src : 'data:,';
     if (!data) { nav.innerHTML = ''; brand.textContent = ''; return; }
-    brand.textContent = data.entreprise.raisonSociale || '';
+    brand.textContent = logo ? 'Évaluation des risques' : data.entreprise.raisonSociale || '';
     nav.innerHTML = `<ul>${NAV.map((n) => `<li><a href="#/${n.route}" class="nav__link"${current === n.route ? ' aria-current="page"' : ''}>${esc(n.label)}${
       n.route === 'versions' && data.journal.length ? ` <span class="nav__badge" aria-label="${plural(data.journal.length, 'modification non publiée', 'modifications non publiées')}">${data.journal.length}</span>` : ''}</a></li>`).join('')}</ul>`;
   }

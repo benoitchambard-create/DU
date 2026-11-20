@@ -93,7 +93,7 @@
   function emptyData() {
     return {
       schema: 1,
-      entreprise: { raisonSociale: '', effectif: null, infos: [] },
+      entreprise: { raisonSociale: '', effectif: null, infos: [], logo: null },
       document: { code: '', indice: '', redacteur: '', verificateur: '', dateCreation: '' },
       seuils: { priorite: 12, second: 4 },
       familles: FAMILLES_DEFAUT.slice(),
