@@ -54,6 +54,11 @@ Une seule convention de nommage, utilisée partout dans le code :
 - **Code** : CSS modulaire basé sur les variables personnalisées ci-dessus. JS minimal, uniquement pour l'amélioration progressive (le site doit fonctionner sans JS).
 - **Assets** : photographies humaines lumineuses et naturelles (équipes au travail, gestes de prévention), grain léger, formes arrondies organiques. Pas d'icônes Lucide/Heroicons standardisées.
 
+# Application DUERP (racine du dépôt)
+- Exception à la règle « fonctionne sans JS » : c'est une application, JavaScript est requis (scripts classiques, pas de modules, pour fonctionner en `file://`).
+- Données de l'entreprise (Excel, `duerp*.json`) : jamais dans Git, jamais envoyées à un service externe.
+- Cotation : G × F × P × M ; priorité ≥ 12, second temps de 4 à 12 (seuils modifiables dans Référentiels).
+
 # Workflow de développement
 - Avant de coder une section, proposer d'abord sa structure spatiale (wireframe en texte) pour valider l'originalité de la composition.
 - Garder ce fichier sous les 150 lignes pour éviter toute dilution des consignes.

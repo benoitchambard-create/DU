@@ -1,0 +1,5 @@
+# Données de l'entreprise : ne jamais les versionner (fichiers Excel et sauvegardes du DUERP)
+*.xlsx
+*.xlsm
+*.xls
+duerp*.json

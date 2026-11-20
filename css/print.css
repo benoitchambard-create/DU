@@ -1,0 +1,55 @@
+/* Documents imprimables (PDF via Chrome) */
+.print-root { display: none; }
+
+@page {
+  size: A4 landscape;
+  margin: 14mm 12mm 16mm;
+  @bottom-right { content: 'Page ' counter(page) ' / ' counter(pages); font-family: 'JetBrains Mono', monospace; font-size: 8pt; color: #4A5568; }
+  @bottom-left { font-family: 'Atkinson Hyperlegible', sans-serif; font-size: 8pt; color: #4A5568; }
+}
+
+@media print {
+  body { background: none; font-size: 9.5pt; line-height: 1.4; }
+  body::before, body::after { display: none !important; }
+  body.is-printing > *:not(.print-root) { display: none !important; }
+  body.is-printing .print-root { display: block; }
+  /* Impression directe sans document préparé : on masque la navigation */
+  body:not(.is-printing) .masthead, body:not(.is-printing) .split__side, body:not(.is-printing) .filters, body:not(.is-printing) .panel { display: none !important; }
+}
+
+.pr-doc { color: #14213A; font-family: 'Atkinson Hyperlegible', sans-serif; }
+.pr-doc h1, .pr-doc h2, .pr-doc h3, .pr-doc h4 { font-family: 'Fraunces', Georgia, serif; color: #1B365D; margin: 0 0 6pt; }
+.pr-cover { min-height: 170mm; display: flex; flex-direction: column; justify-content: center; break-after: page; padding-left: 12mm; border-left: 3mm solid #0D7377; }
+.pr-kicker { font-size: 11pt; letter-spacing: 0.14em; text-transform: uppercase; color: #0D7377; font-weight: 700; margin-bottom: 8mm; }
+.pr-cover h1 { font-size: 38pt; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 12mm; }
+.pr-meta { display: grid; grid-template-columns: repeat(3, auto); gap: 4mm 14mm; justify-content: start; margin: 0; }
+.pr-meta dt { font-size: 8pt; letter-spacing: 0.1em; text-transform: uppercase; color: #4A5568; }
+.pr-meta dd { margin: 0; font-size: 12pt; font-weight: 700; }
+.pr-motif { margin-top: 10mm; max-width: 180mm; }
+.pr-section { margin-bottom: 8mm; }
+.pr-break { break-before: page; }
+.pr-section h2 { font-size: 18pt; border-bottom: 0.6pt solid #CBD3DE; padding-bottom: 2mm; }
+.pr-sub { color: #4A5568; margin: 0 0 3mm; }
+.pr-infos { display: grid; grid-template-columns: 1fr 1fr; gap: 2mm 10mm; margin: 0 0 6mm; }
+.pr-infos div { display: grid; grid-template-columns: 55mm 1fr; }
+.pr-infos dt { color: #4A5568; }
+.pr-infos dd { margin: 0; }
+.pr-doc h4 { margin-top: 5mm; }
+.pr-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6mm; font-size: 8.5pt; }
+.pr-cols ol, .pr-cols ul { padding-left: 4mm; margin: 0; }
+.pr-table { width: 100%; border-collapse: collapse; font-size: 8pt; }
+.pr-table thead { display: table-header-group; }
+.pr-table tr { break-inside: avoid; }
+.pr-table th { background: #1B365D; color: #FCFBF8; text-align: left; padding: 1.6mm; font-weight: 700; vertical-align: bottom; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.pr-table td { border-bottom: 0.4pt solid #CBD3DE; padding: 1.6mm; vertical-align: top; }
+.pr-table small { color: #4A5568; }
+.pr-table--num td, .pr-table--num tfoot th { text-align: center; }
+.pr-table tfoot th, .pr-table tfoot td { background: #F1F2F0; font-weight: 700; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.pr-w { width: 18%; }
+.pr-mono { font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+.pr-prio { display: inline-block; padding: 0.5mm 1.5mm; border-radius: 1.5mm; font-weight: 700; white-space: nowrap; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.pr-prio--p1 { background: #F6E3E1; color: #991B1B; }
+.pr-prio--p2 { background: #FBEEDD; color: #B45309; }
+.pr-prio--p3 { background: #E3F0EA; color: #1E6F50; }
+.pr-prio--nc { background: #F1F2F0; color: #4A5568; }
+.pr-note, .pr-empty { color: #4A5568; font-size: 8.5pt; }

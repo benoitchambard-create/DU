@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Document unique</title>
+  <meta name="description" content="Gestion du document unique d’évaluation des risques professionnels (DUERP) : inventaire, plan d’actions, pénibilité, versions et extractions.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/views.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+  <a class="skip" href="#view-root">Aller au contenu</a>
+
+  <header class="masthead">
+    <div class="masthead__brand">
+      <a href="#/synthese" class="brand">Document <em>unique</em></a>
+      <span id="brand-sub" class="brand__sub"></span>
+    </div>
+    <nav id="main-nav" class="nav" aria-label="Navigation principale"></nav>
+    <div id="save-status" class="masthead__status" aria-live="polite"></div>
+  </header>
+
+  <main id="main" class="page">
+    <div id="view-root" tabindex="-1">
+      <noscript>
+        <section class="welcome">
+          <h1 class="welcome__title">Cette application a besoin de JavaScript.</h1>
+          <p class="lede">Le document unique est géré dans votre navigateur, sans serveur. Activez JavaScript dans Chrome ou Edge pour l’utiliser.</p>
+        </section>
+      </noscript>
+    </div>
+  </main>
+
+  <aside id="panel" class="panel" hidden aria-label="Fiche détaillée"></aside>
+  <dialog id="dialog" class="dialog"></dialog>
+  <div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+  <div id="busy" class="busy" hidden><p>Lecture du fichier Excel…</p></div>
+  <div id="print-root" class="print-root"></div>
+
+  <script src="vendor/exceljs.min.js" defer></script>
+  <script src="js/util.js" defer></script>
+  <script src="js/model.js" defer></script>
+  <script src="js/store.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/import-excel.js" defer></script>
+  <script src="js/export.js" defer></script>
+  <script src="js/views/accueil.js" defer></script>
+  <script src="js/views/synthese.js" defer></script>
+  <script src="js/views/risques.js" defer></script>
+  <script src="js/views/actions.js" defer></script>
+  <script src="js/views/penibilite.js" defer></script>
+  <script src="js/views/versions.js" defer></script>
+  <script src="js/views/extractions.js" defer></script>
+  <script src="js/views/referentiels.js" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>
